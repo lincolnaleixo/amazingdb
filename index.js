@@ -6,7 +6,7 @@ class db {
 
 		try {
 
-			fs.writeFileSync(file, content)
+			fs.writeFileSync(file, JSON.stringify(content))
 
 			return true
 
@@ -24,7 +24,9 @@ class db {
 
 		try {
 
-			return fs.readFileSync(file)
+			const buffer = fs.readFileSync(file)
+
+			return JSON.parse(buffer)
 
 		} catch (error) {
 
