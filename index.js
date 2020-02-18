@@ -1,11 +1,13 @@
 const fs = require('fs')
+const jsonpack = require('jsonpack/main')
 
 class db {
 
-	save(file, content) {
+	save(file, content, compress) {
 
 		try {
 
+			if (compress) fs.writeFileSync(file, jsonpack.pack(content))
 			fs.writeFileSync(file, JSON.stringify(content))
 
 			return true
@@ -17,7 +19,6 @@ class db {
 		}
 
 		return false
-
 	}
 
 	select(file) {
@@ -25,8 +26,17 @@ class db {
 		try {
 
 			const buffer = fs.readFileSync(file)
+			const content = buffer.toString()
 
-			return JSON.parse(buffer)
+			try {
+
+				return jsonpack.unpack(content)
+
+			} catch (e) {
+
+				return JSON.parse(content)
+
+			}
 
 		} catch (error) {
 
